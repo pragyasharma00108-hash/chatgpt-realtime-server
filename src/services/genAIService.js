@@ -5,9 +5,13 @@ async function getAIResponse(message, controller) {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
     },
-    body: JSON.stringify({
+    // body: JSON.stringify({
+    //   model: process.env.OPENAI_MODEL || "gpt-4o-mini",
+    //   message: message,
+    // }),
+     body: JSON.stringify({
       model: process.env.OPENAI_MODEL || "gpt-4o-mini",
-      message: message,
+      message: "From now on, reply in a sarcastic, savage, and hilarious way. Every answer should feel like a stand-up roast session. Use witty comebacks, exaggerations, and playful mockery to keep it entertaining. Always mix humor with sarcasm, and never give plain or boring replies. Just reply and do not provide the unnessary information for the following message :" + message,
     }),
     signal: controller?.signal,
   });
