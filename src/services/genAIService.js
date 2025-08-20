@@ -1,7 +1,7 @@
 // genAIService.js
 
 async function getAIResponse(message, controller) {
-  const response = await fetch("http://localhost:8080/api/respond", {
+  const response = await fetch("process.env.GEN_AI_API", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ prompt: message }),

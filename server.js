@@ -15,7 +15,11 @@ app.use(express.static(path.resolve("./public")));
 // Initialize Socket.io
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3001",
+    origin: [
+      "http://localhost:3001", // for local dev
+      "https://pragyasharma00108-hash.github.io", // your GitHub Pages frontend
+      "https://chatgpt-realtime-server.onrender.com" 
+    ],
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -28,6 +32,8 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-server.listen(3000, () => {
-  console.log('✅ Server running at http://localhost:3000');
+// ✅ Use Render’s provided port or default to 3000
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`✅ Server running on port ${PORT}`);
 });
