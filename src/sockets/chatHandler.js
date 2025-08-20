@@ -4,7 +4,14 @@ module.exports = (io, socket) => {
   console.log('🔌 A user connected');
 
   socket.on("user-message", async (message) => {
-    console.log("User:", message);
+    // Trim and validate message
+    const userMessage = typeof message === "string" ? message.trim() : "";
+    if (!userMessage) {
+      console.log("❌ Ignored empty message");
+      return; // do not call AI API with empty message
+    }
+
+    console.log("User:", userMessage);
 
     let responded = false;
     const controller = new AbortController();
@@ -13,13 +20,13 @@ module.exports = (io, socket) => {
     const timeout = setTimeout(() => {
       if (!responded) {
         responded = true;
-        io.emit("message", message);
+        io.emit("message", userMessage); // fallback
         controller.abort();
       }
     }, 120000);
 
     try {
-      const text = await getAIResponse(message, controller);
+      const text = await getAIResponse(userMessage, controller);
 
       if (!responded) {
         responded = true;
@@ -31,7 +38,7 @@ module.exports = (io, socket) => {
         responded = true;
         clearTimeout(timeout);
         console.error("Gen AI error:", error);
-        io.emit("message", message); // fallback
+        io.emit("message", userMessage); // fallback
       }
     }
   });
